@@ -2,7 +2,15 @@
   "permissions": {
     "allow": [
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(curl -sSL https://raw.githubusercontent.com/NortheBridge/luminalshine/main/LICENSE)",
+      "Bash(curl -sSL https://raw.githubusercontent.com/NortheBridge/Twilight/main/README.md)",
+      "Bash(curl -sSL https://raw.githubusercontent.com/NortheBridge/Twilight/main/LICENSE)",
+      "Bash(cp /Users/Avalon/.claude/projects/-Users-Avalon-GitHub-northebridge-github-io/eade7688-f723-4787-a96b-d88915cfcb5f/tool-results/bqi88eucg.txt /Users/Avalon/GitHub/northebridge.github.io/licenses/luminalshine-gpl-3.0.txt && wc -l /Users/Avalon/GitHub/northebridge.github.io/licenses/luminalshine-gpl-3.0.txt)",
+      "Bash(curl -sSL https://raw.githubusercontent.com/NortheBridge/Twilight/main/LICENSE -o /Users/Avalon/GitHub/northebridge.github.io/licenses/twilight-mit.txt)"
+    ],
+    "additionalDirectories": [
+      "/Users/Avalon/.claude/projects/-Users-Avalon-GitHub-northebridge-github-io/eade7688-f723-4787-a96b-d88915cfcb5f/tool-results"
     ]
   }
 }
