@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Software Licenses | NortheBridge Foundation</title>
+    <meta name="description" content="Software license notices for NortheBridge Foundation open-source projects." />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XDW66C09S1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-XDW66C09S1');
+    </script>
+    <style>
+      :root {
+        --bg-base: #04060f;
+        --bg-deep: #070b1f;
+        --aurora-1: #1ec8ff;
+        --aurora-2: #4a7dff;
+        --aurora-3: #8a5cff;
+        --aurora-4: #00e0c6;
+        --text-primary: #f3f6ff;
+        --text-secondary: rgba(225, 232, 255, 0.68);
+        --text-muted: rgba(180, 195, 230, 0.55);
+        --glass-bg: rgba(20, 30, 60, 0.35);
+        --glass-bg-strong: rgba(15, 22, 45, 0.78);
+        --glass-border: rgba(255, 255, 255, 0.12);
+        --glass-border-hover: rgba(120, 200, 255, 0.45);
+        --glass-highlight: rgba(255, 255, 255, 0.08);
+      }
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; min-height: 100%; }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+        font-feature-settings: "ss01", "cv11";
+        background-color: var(--bg-base);
+        color: var(--text-primary);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      body.modal-open { overflow: hidden; }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: -20%;
+        z-index: -2;
+        background:
+          radial-gradient(ellipse 60% 50% at 15% 20%, rgba(30, 200, 255, 0.35), transparent 60%),
+          radial-gradient(ellipse 50% 45% at 85% 15%, rgba(138, 92, 255, 0.32), transparent 60%),
+          radial-gradient(ellipse 70% 55% at 50% 95%, rgba(0, 224, 198, 0.22), transparent 65%),
+          radial-gradient(ellipse 45% 40% at 90% 80%, rgba(74, 125, 255, 0.28), transparent 60%),
+          linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-base) 100%);
+        filter: blur(40px) saturate(125%);
+        animation: aurora-drift 28s ease-in-out infinite alternate;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size: 3px 3px;
+        opacity: 0.6;
+        pointer-events: none;
+        mix-blend-mode: overlay;
+      }
+
+      @keyframes aurora-drift {
+        0%   { transform: translate3d(0, 0, 0) scale(1); }
+        50%  { transform: translate3d(-2%, 1.5%, 0) scale(1.05); }
+        100% { transform: translate3d(2%, -1%, 0) scale(1.02); }
+      }
+
+      .container {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 6rem 1.5rem 5rem;
+        position: relative;
+      }
+
+      header { margin-bottom: 4rem; max-width: 720px; }
+
+      .brand-mark {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.4rem 0.9rem 0.4rem 0.5rem;
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid var(--glass-border);
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        color: var(--text-secondary);
+        margin-bottom: 1.75rem;
+        text-decoration: none;
+        transition: border-color 0.3s ease, color 0.3s ease;
+      }
+      .brand-mark:hover { color: var(--text-primary); border-color: var(--glass-border-hover); }
+
+      .brand-mark .dot {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--aurora-1), var(--aurora-4));
+        box-shadow: 0 0 12px rgba(30, 200, 255, 0.7);
+        animation: pulse 2.4s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50%      { opacity: 0.6; transform: scale(0.85); }
+      }
+
+      h1 {
+        font-size: clamp(2.6rem, 6vw, 4.4rem);
+        line-height: 1.05;
+        margin: 0 0 1.25rem;
+        font-weight: 600;
+        letter-spacing: -0.035em;
+        background: linear-gradient(135deg, #ffffff 0%, #cfe4ff 45%, #8ecbff 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+      }
+
+      .lead {
+        font-size: clamp(1.05rem, 1.7vw, 1.25rem);
+        color: var(--text-secondary);
+        max-width: 580px;
+        margin: 0;
+        font-weight: 400;
+      }
+
+      .section-label {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin: 0 0 1.5rem;
+      }
+      .section-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, var(--glass-border), transparent);
+      }
+
+      .projects {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        padding: 2rem 2rem 1.75rem;
+        border-radius: 22px;
+        background: var(--glass-bg);
+        backdrop-filter: blur(22px) saturate(180%);
+        -webkit-backdrop-filter: blur(22px) saturate(180%);
+        border: 1px solid var(--glass-border);
+        color: inherit;
+        text-align: left;
+        font: inherit;
+        cursor: pointer;
+        overflow: hidden;
+        isolation: isolate;
+        transition:
+          transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+          border-color 0.4s ease,
+          box-shadow 0.5s ease,
+          background 0.4s ease;
+        box-shadow:
+          0 1px 0 var(--glass-highlight) inset,
+          0 30px 60px -30px rgba(0, 0, 0, 0.6);
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(120% 80% at 0% 0%, rgba(120, 200, 255, 0.18), transparent 55%),
+          radial-gradient(120% 80% at 100% 100%, rgba(138, 92, 255, 0.14), transparent 55%);
+        opacity: 0.85;
+        z-index: -1;
+        transition: opacity 0.5s ease;
+      }
+
+      .card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(135deg, rgba(120, 200, 255, 0.55), rgba(138, 92, 255, 0.0) 35%, rgba(0, 224, 198, 0.0) 65%, rgba(120, 200, 255, 0.45));
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+                mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        pointer-events: none;
+      }
+
+      .card:hover, .card:focus-visible {
+        transform: translateY(-4px);
+        border-color: var(--glass-border-hover);
+        box-shadow:
+          0 1px 0 var(--glass-highlight) inset,
+          0 0 0 1px rgba(120, 200, 255, 0.18),
+          0 25px 55px -20px rgba(30, 120, 220, 0.45),
+          0 40px 80px -30px rgba(138, 92, 255, 0.35);
+        outline: none;
+      }
+      .card:hover::before, .card:focus-visible::before { opacity: 1; }
+      .card:hover::after, .card:focus-visible::after { opacity: 1; }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .card-icon {
+        width: 44px; height: 44px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, rgba(30, 200, 255, 0.22), rgba(138, 92, 255, 0.22));
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--aurora-1);
+        flex-shrink: 0;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      }
+
+      .card-icon svg {
+        width: 22px; height: 22px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .card-title-group { display: flex; flex-direction: column; gap: 0.3rem; }
+
+      .card h3 {
+        margin: 0;
+        font-size: 1.35rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--text-primary);
+      }
+
+      .license-badge {
+        display: inline-block;
+        width: max-content;
+        padding: 0.18rem 0.55rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--aurora-1);
+        background: rgba(30, 200, 255, 0.1);
+        border: 1px solid rgba(30, 200, 255, 0.28);
+        border-radius: 999px;
+      }
+
+      .card-desc {
+        margin: 0 0 1rem;
+        color: var(--text-secondary);
+        font-size: 0.97rem;
+        line-height: 1.6;
+      }
+
+      .nosl-notice {
+        margin: 0;
+        padding: 0.85rem 1rem;
+        font-size: 0.78rem;
+        line-height: 1.55;
+        color: var(--text-muted);
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-left: 2px solid rgba(120, 200, 255, 0.4);
+        border-radius: 10px;
+        flex: 1;
+      }
+
+      .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-top: 1.5rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+      }
+
+      .card-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: var(--aurora-1);
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+
+      .card-action svg {
+        width: 14px; height: 14px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .card:hover .card-action svg, .card:focus-visible .card-action svg { transform: translateX(3px); }
+
+      footer {
+        margin-top: 5rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+      }
+
+      .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1.4rem;
+      }
+
+      footer a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: color 0.25s ease;
+      }
+      footer a:hover { color: var(--aurora-1); }
+
+      /* ---------- Modal ---------- */
+      .modal {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: grid;
+        place-items: center;
+        padding: 1.5rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .modal[hidden] { display: none !important; }
+      .modal.is-open { opacity: 1; }
+
+      .modal-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(2, 4, 12, 0.65);
+        backdrop-filter: blur(18px) saturate(140%);
+        -webkit-backdrop-filter: blur(18px) saturate(140%);
+      }
+
+      .modal-card {
+        position: relative;
+        width: min(820px, 100%);
+        max-height: min(86vh, 800px);
+        display: flex;
+        flex-direction: column;
+        background: var(--glass-bg-strong);
+        backdrop-filter: blur(28px) saturate(180%);
+        -webkit-backdrop-filter: blur(28px) saturate(180%);
+        border: 1px solid var(--glass-border);
+        border-radius: 22px;
+        box-shadow:
+          0 1px 0 var(--glass-highlight) inset,
+          0 30px 80px -20px rgba(0, 0, 0, 0.65),
+          0 0 0 1px rgba(120, 200, 255, 0.08);
+        overflow: hidden;
+        transform: translateY(8px) scale(0.985);
+        transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .modal.is-open .modal-card { transform: translateY(0) scale(1); }
+
+      .modal-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1.5rem 1.75rem 1.25rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .modal-eyebrow {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 0.35rem;
+      }
+
+      .modal-header h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--text-primary);
+      }
+
+      .modal-x {
+        width: 36px; height: 36px;
+        display: grid;
+        place-items: center;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+        flex-shrink: 0;
+      }
+      .modal-x:hover { background: rgba(255, 255, 255, 0.08); color: var(--text-primary); border-color: var(--glass-border-hover); }
+      .modal-x svg { width: 16px; height: 16px; }
+
+      .modal-body {
+        flex: 1;
+        overflow: auto;
+        padding: 1.25rem 1.75rem 1.5rem;
+        scrollbar-color: rgba(120, 200, 255, 0.4) transparent;
+      }
+      .modal-body::-webkit-scrollbar { width: 10px; }
+      .modal-body::-webkit-scrollbar-thumb { background: rgba(120, 200, 255, 0.3); border-radius: 999px; }
+      .modal-body::-webkit-scrollbar-track { background: transparent; }
+
+      #modal-text {
+        margin: 0;
+        font-family: "JetBrains Mono", "SFMono-Regular", ui-monospace, "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+        font-size: 0.82rem;
+        line-height: 1.6;
+        color: var(--text-secondary);
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+
+      .modal-status {
+        padding: 1rem 1.75rem 0;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+      .modal-status[hidden] { display: none; }
+
+      .modal-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1.1rem 1.75rem 1.4rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .modal-source-link {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: color 0.25s ease;
+      }
+      .modal-source-link:hover { color: var(--aurora-1); }
+
+      .modal-close-btn {
+        padding: 0.6rem 1.4rem;
+        background: linear-gradient(135deg, rgba(30, 200, 255, 0.18), rgba(138, 92, 255, 0.18));
+        border: 1px solid rgba(120, 200, 255, 0.4);
+        border-radius: 12px;
+        color: var(--text-primary);
+        font: inherit;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+      }
+      .modal-close-btn:hover {
+        background: linear-gradient(135deg, rgba(30, 200, 255, 0.28), rgba(138, 92, 255, 0.28));
+        border-color: rgba(120, 200, 255, 0.65);
+      }
+      .modal-close-btn:active { transform: translateY(1px); }
+
+      @media (max-width: 640px) {
+        .container { padding: 4rem 1.25rem 3rem; }
+        header { margin-bottom: 3rem; }
+        .card { padding: 1.65rem 1.5rem 1.4rem; }
+        .modal { padding: 1rem; }
+        .modal-header, .modal-footer, .modal-status { padding-left: 1.25rem; padding-right: 1.25rem; }
+        .modal-body { padding-left: 1.25rem; padding-right: 1.25rem; }
+        #modal-text { font-size: 0.78rem; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        body::before { animation: none; }
+        .brand-mark .dot { animation: none; }
+        .card, .card-action svg, .modal, .modal-card { transition: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <a class="brand-mark" href="/">
+          <span class="dot" aria-hidden="true"></span>
+          NortheBridge Foundation
+        </a>
+        <h1>Software Licenses</h1>
+        <p class="lead">
+          License notices for each NortheBridge Foundation open-source project. Select a project to view the full license text.
+        </p>
+      </header>
+
+      <main>
+        <h2 class="section-label">Projects</h2>
+        <section class="projects">
+          <button class="card" type="button"
+                  data-license-file="luminalshine-gpl-3.0.txt"
+                  data-license-name="GNU General Public License v3.0"
+                  data-project="LuminalShine"
+                  data-source="https://github.com/NortheBridge/luminalshine/blob/main/LICENSE"
+                  aria-haspopup="dialog">
+            <div class="card-header">
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" />
+                </svg>
+              </div>
+              <div class="card-title-group">
+                <h3>LuminalShine</h3>
+                <span class="license-badge">GPL-3.0</span>
+              </div>
+            </div>
+            <p class="card-desc">
+              Modern self-hosted high-performance Sunshine-compatible game stream host for Moonlight, designed for Windows 11.
+            </p>
+            <p class="nosl-notice">
+              Portions of this software may be licensed under the NortheBridge Open Source License (NOSL) or under terms that differ from the primary license shown above. All applicable license notices are distributed with the source code.
+            </p>
+            <div class="card-footer">
+              <span class="card-action">
+                View full license
+                <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+              </span>
+            </div>
+          </button>
+
+          <button class="card" type="button"
+                  data-license-file="twilight-mit.txt"
+                  data-license-name="MIT License"
+                  data-project="Twilight"
+                  data-source="https://github.com/NortheBridge/Twilight/blob/main/LICENSE"
+                  aria-haspopup="dialog">
+            <div class="card-header">
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+                </svg>
+              </div>
+              <div class="card-title-group">
+                <h3>Twilight</h3>
+                <span class="license-badge">MIT</span>
+              </div>
+            </div>
+            <p class="card-desc">
+              Moonlight streaming client for LG webOS OLED TVs, available on the webOS App Store.
+            </p>
+            <p class="nosl-notice">
+              Portions of this software may be licensed under the NortheBridge Open Source License (NOSL) or under terms that differ from the primary license shown above. All applicable license notices are distributed with the source code.
+            </p>
+            <div class="card-footer">
+              <span class="card-action">
+                View full license
+                <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+              </span>
+            </div>
+          </button>
+        </section>
+      </main>
+
+      <footer>
+        <span>&copy; NortheBridge Foundation</span>
+        <nav class="footer-links" aria-label="Footer">
+          <a href="/terms/">Terms</a>
+          <a href="/privacy/">Privacy</a>
+          <a href="/licenses/">Software Licenses</a>
+          <a href="https://github.com/NortheBridge" target="_blank" rel="noopener">github.com/NortheBridge</a>
+        </nav>
+      </footer>
+    </div>
+
+    <div class="modal" id="license-modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-backdrop" data-close="true"></div>
+      <div class="modal-card">
+        <header class="modal-header">
+          <div>
+            <span class="modal-eyebrow" id="modal-project">Project</span>
+            <h2 id="modal-title">License</h2>
+          </div>
+          <button class="modal-x" type="button" data-close="true" aria-label="Close license">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </header>
+        <p class="modal-status" id="modal-status" hidden></p>
+        <div class="modal-body">
+          <pre id="modal-text"></pre>
+        </div>
+        <footer class="modal-footer">
+          <a class="modal-source-link" id="modal-source" href="#" target="_blank" rel="noopener">View source on GitHub &rarr;</a>
+          <button class="modal-close-btn" type="button" data-close="true">Close</button>
+        </footer>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var modal = document.getElementById('license-modal');
+        var modalTitle = document.getElementById('modal-title');
+        var modalProject = document.getElementById('modal-project');
+        var modalText = document.getElementById('modal-text');
+        var modalSource = document.getElementById('modal-source');
+        var modalStatus = document.getElementById('modal-status');
+        var closeBtn = modal.querySelector('.modal-close-btn');
+        var cache = {};
+        var lastTrigger = null;
+        var fetchToken = 0;
+
+        function setStatus(message) {
+          if (message) {
+            modalStatus.textContent = message;
+            modalStatus.hidden = false;
+          } else {
+            modalStatus.hidden = true;
+            modalStatus.textContent = '';
+          }
+        }
+
+        function loadLicense(file) {
+          if (cache[file]) return Promise.resolve(cache[file]);
+          return fetch(file, { cache: 'force-cache' }).then(function (r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.text();
+          }).then(function (text) {
+            cache[file] = text;
+            return text;
+          });
+        }
+
+        function openModal(card) {
+          var file = card.getAttribute('data-license-file');
+          var name = card.getAttribute('data-license-name');
+          var project = card.getAttribute('data-project');
+          var source = card.getAttribute('data-source');
+
+          modalTitle.textContent = name || 'License';
+          modalProject.textContent = project || '';
+          modalSource.href = source || '#';
+          modalText.textContent = '';
+          setStatus('Loading license…');
+
+          lastTrigger = card;
+          modal.hidden = false;
+          document.body.classList.add('modal-open');
+          requestAnimationFrame(function () { modal.classList.add('is-open'); });
+          closeBtn.focus();
+
+          var token = ++fetchToken;
+          loadLicense(file).then(function (text) {
+            if (token !== fetchToken) return;
+            setStatus('');
+            modalText.textContent = text;
+          }).catch(function (err) {
+            if (token !== fetchToken) return;
+            setStatus('Unable to load license text (' + err.message + '). View the source on GitHub.');
+          });
+        }
+
+        function closeModal() {
+          modal.classList.remove('is-open');
+          document.body.classList.remove('modal-open');
+          fetchToken++;
+          setTimeout(function () {
+            modal.hidden = true;
+            modalText.textContent = '';
+            setStatus('');
+            if (lastTrigger) lastTrigger.focus();
+          }, 280);
+        }
+
+        document.querySelectorAll('.card[data-license-file]').forEach(function (card) {
+          card.addEventListener('click', function () { openModal(card); });
+        });
+
+        modal.addEventListener('click', function (e) {
+          if (e.target.closest('[data-close]')) closeModal();
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && !modal.hidden) closeModal();
+        });
+      })();
+    </script>
+  </body>
+</html>
