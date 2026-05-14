@@ -358,6 +358,13 @@
         font-size: 0.85rem;
       }
 
+      .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1.4rem;
+      }
+
       footer a {
         color: var(--text-secondary);
         text-decoration: none;
@@ -448,7 +455,12 @@
 
       <footer>
         <span>&copy; NortheBridge Foundation</span>
-        <a href="https://github.com/NortheBridge" target="_blank" rel="noopener">github.com/NortheBridge</a>
+        <nav class="footer-links" aria-label="Footer">
+          <a href="/terms/">Terms</a>
+          <a href="/privacy/">Privacy</a>
+          <a href="/licenses/">Software Licenses</a>
+          <a href="https://github.com/NortheBridge" target="_blank" rel="noopener">github.com/NortheBridge</a>
+        </nav>
       </footer>
     </div>
   </body>
