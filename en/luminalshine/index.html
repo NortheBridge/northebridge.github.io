@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>NortheBridge Foundation | Open Source, Beautifully Engineered</title>
-    <meta name="description" content="Open-source projects from the NortheBridge Foundation." />
+    <title>LuminalShine | NortheBridge Foundation</title>
+    <meta name="description" content="LuminalShine — a modern, self-hosted, Sunshine-compatible game stream host for Moonlight, built for Windows 11." />
+    <link rel="icon" type="image/png" href="/en/luminalshine/luminalshine-logo.png" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XDW66C09S1"></script>
     <script>
@@ -16,18 +17,20 @@
     </script>
     <style>
       :root {
-        --bg-base: #04060f;
-        --bg-deep: #070b1f;
-        --aurora-1: #1ec8ff;
-        --aurora-2: #4a7dff;
-        --aurora-3: #8a5cff;
-        --aurora-4: #00e0c6;
-        --text-primary: #f3f6ff;
-        --text-secondary: rgba(225, 232, 255, 0.68);
-        --text-muted: rgba(180, 195, 230, 0.55);
-        --glass-bg: rgba(20, 30, 60, 0.35);
+        /* Learn Dark surfaces (LuminalShine RTD) */
+        --bg-base: #111111;
+        --bg-deep: #1a1206;
+        /* Sunshine brand palette (from sunshine.png, via the RTD theme) */
+        --sun-red: #ff3d00;    /* deep red-orange — outer flare */
+        --sun-orange: #ff7a1a; /* mid orange — warnings, hover-to-active */
+        --sun-gold: #ffb020;   /* PRIMARY — links, focus, brand mark */
+        --sun-soft: #ffc857;   /* soft gold — hover / secondary accents */
+        --text-primary: #e6e6e6;
+        --text-secondary: rgba(230, 230, 230, 0.68);
+        --text-muted: rgba(184, 184, 184, 0.55);
+        --glass-bg: rgba(46, 32, 14, 0.35);
         --glass-border: rgba(255, 255, 255, 0.12);
-        --glass-border-hover: rgba(120, 200, 255, 0.45);
+        --glass-border-hover: rgba(255, 176, 32, 0.45);
         --glass-highlight: rgba(255, 255, 255, 0.08);
       }
 
@@ -40,7 +43,7 @@
       }
 
       body {
-        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+        font-family: "Segoe UI Variable Text", "Segoe UI", "Inter", -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
         font-feature-settings: "ss01", "cv11";
         background-color: var(--bg-base);
         color: var(--text-primary);
@@ -57,13 +60,13 @@
         inset: -20%;
         z-index: -2;
         background:
-          radial-gradient(ellipse 60% 50% at 15% 20%, rgba(30, 200, 255, 0.35), transparent 60%),
-          radial-gradient(ellipse 50% 45% at 85% 15%, rgba(138, 92, 255, 0.32), transparent 60%),
-          radial-gradient(ellipse 70% 55% at 50% 95%, rgba(0, 224, 198, 0.22), transparent 65%),
-          radial-gradient(ellipse 45% 40% at 90% 80%, rgba(74, 125, 255, 0.28), transparent 60%),
+          radial-gradient(ellipse 60% 50% at 15% 20%, rgba(255, 176, 32, 0.28), transparent 60%),
+          radial-gradient(ellipse 50% 45% at 85% 15%, rgba(255, 61, 0, 0.22), transparent 60%),
+          radial-gradient(ellipse 70% 55% at 50% 95%, rgba(255, 122, 26, 0.18), transparent 65%),
+          radial-gradient(ellipse 45% 40% at 90% 80%, rgba(255, 200, 87, 0.16), transparent 60%),
           linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-base) 100%);
         filter: blur(40px) saturate(125%);
-        animation: aurora-drift 28s ease-in-out infinite alternate;
+        animation: sunshine-drift 28s ease-in-out infinite alternate;
       }
 
       body::after {
@@ -79,7 +82,7 @@
         mix-blend-mode: overlay;
       }
 
-      @keyframes aurora-drift {
+      @keyframes sunshine-drift {
         0%   { transform: translate3d(0, 0, 0) scale(1); }
         50%  { transform: translate3d(-2%, 1.5%, 0) scale(1.05); }
         100% { transform: translate3d(2%, -1%, 0) scale(1.02); }
@@ -112,14 +115,21 @@
         letter-spacing: 0.04em;
         color: var(--text-secondary);
         margin-bottom: 1.75rem;
+        text-decoration: none;
+        transition: border-color 0.3s ease, color 0.3s ease;
+      }
+
+      a.brand-mark:hover {
+        border-color: var(--glass-border-hover);
+        color: var(--text-primary);
       }
 
       .brand-mark .dot {
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background: linear-gradient(135deg, var(--aurora-1), var(--aurora-4));
-        box-shadow: 0 0 12px rgba(30, 200, 255, 0.7);
+        background: linear-gradient(135deg, var(--sun-gold), var(--sun-red));
+        box-shadow: 0 0 12px rgba(255, 176, 32, 0.7);
         animation: pulse 2.4s ease-in-out infinite;
       }
 
@@ -128,13 +138,33 @@
         50%      { opacity: 0.6; transform: scale(0.85); }
       }
 
+      .hero-brand {
+        display: flex;
+        align-items: center;
+        gap: 1.4rem;
+        margin-bottom: 1.25rem;
+      }
+
+      /* Logo implementation from the LuminalShine RTD theme:
+         sunshine.png rendered with a warm drop-shadow. */
+      .hero-logo {
+        width: 96px;
+        height: 96px;
+        flex-shrink: 0;
+        filter: drop-shadow(0 1px 3px rgba(255, 122, 26, 0.35));
+      }
+
+      /* Sunburst text-clip gradient on the wordmark, as on the RTD
+         sidebar-brand-text: deep red-orange → sun gold → soft gold. */
       h1 {
         font-size: clamp(2.6rem, 6vw, 4.4rem);
         line-height: 1.05;
-        margin: 0 0 1.25rem;
-        font-weight: 600;
-        letter-spacing: -0.035em;
-        background: linear-gradient(135deg, #ffffff 0%, #cfe4ff 45%, #8ecbff 100%);
+        margin: 0;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        font-family: "Segoe UI Variable Display", "Segoe UI Variable Text", "Segoe UI",
+          -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+        background: linear-gradient(135deg, #ff5c1a 0%, var(--sun-gold) 55%, var(--sun-soft) 100%);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -147,6 +177,17 @@
         max-width: 580px;
         margin: 0;
         font-weight: 400;
+      }
+
+      .lead a {
+        color: var(--sun-gold);
+        text-decoration: none;
+      }
+
+      .lead a:hover {
+        color: var(--sun-soft);
+        text-decoration: underline;
+        text-decoration-color: rgba(255, 200, 87, 0.55);
       }
 
       .section-label {
@@ -168,7 +209,7 @@
         background: linear-gradient(90deg, var(--glass-border), transparent);
       }
 
-      .projects {
+      .cards {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
         gap: 1.5rem;
@@ -203,8 +244,8 @@
         position: absolute;
         inset: 0;
         background:
-          radial-gradient(120% 80% at 0% 0%, rgba(120, 200, 255, 0.18), transparent 55%),
-          radial-gradient(120% 80% at 100% 100%, rgba(138, 92, 255, 0.14), transparent 55%);
+          radial-gradient(120% 80% at 0% 0%, rgba(255, 176, 32, 0.16), transparent 55%),
+          radial-gradient(120% 80% at 100% 100%, rgba(255, 61, 0, 0.12), transparent 55%);
         opacity: 0.85;
         z-index: -1;
         transition: opacity 0.5s ease;
@@ -216,7 +257,7 @@
         inset: 0;
         border-radius: inherit;
         padding: 1px;
-        background: linear-gradient(135deg, rgba(120, 200, 255, 0.55), rgba(138, 92, 255, 0.0) 35%, rgba(0, 224, 198, 0.0) 65%, rgba(120, 200, 255, 0.45));
+        background: linear-gradient(135deg, rgba(255, 176, 32, 0.55), rgba(255, 61, 0, 0.0) 35%, rgba(255, 200, 87, 0.0) 65%, rgba(255, 176, 32, 0.45));
         -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
         -webkit-mask-composite: xor;
                 mask-composite: exclude;
@@ -231,9 +272,9 @@
         border-color: var(--glass-border-hover);
         box-shadow:
           0 1px 0 var(--glass-highlight) inset,
-          0 0 0 1px rgba(120, 200, 255, 0.18),
-          0 25px 55px -20px rgba(30, 120, 220, 0.45),
-          0 40px 80px -30px rgba(138, 92, 255, 0.35);
+          0 0 0 1px rgba(255, 176, 32, 0.18),
+          0 25px 55px -20px rgba(255, 122, 26, 0.35),
+          0 40px 80px -30px rgba(255, 61, 0, 0.30);
         outline: none;
       }
 
@@ -256,9 +297,9 @@
         border-radius: 12px;
         display: grid;
         place-items: center;
-        background: linear-gradient(135deg, rgba(30, 200, 255, 0.22), rgba(138, 92, 255, 0.22));
+        background: linear-gradient(135deg, rgba(255, 176, 32, 0.22), rgba(255, 61, 0, 0.22));
         border: 1px solid rgba(255, 255, 255, 0.12);
-        color: var(--aurora-1);
+        color: var(--sun-gold);
         flex-shrink: 0;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
       }
@@ -322,7 +363,7 @@
         display: inline-flex;
         align-items: center;
         gap: 0.4rem;
-        color: var(--aurora-1);
+        color: var(--sun-gold);
         font-size: 0.85rem;
         font-weight: 500;
         transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.3s ease;
@@ -371,11 +412,18 @@
         transition: color 0.25s ease;
       }
 
-      footer a:hover { color: var(--aurora-1); }
+      footer a:hover { color: var(--sun-gold); }
+
+      ::selection {
+        background: rgba(255, 176, 32, 0.30);
+        color: var(--text-primary);
+      }
 
       @media (max-width: 640px) {
         .container { padding: 4rem 1.25rem 3rem; }
         header { margin-bottom: 3rem; }
+        .hero-brand { gap: 1rem; }
+        .hero-logo { width: 72px; height: 72px; }
         .card { padding: 1.65rem 1.5rem 1.4rem; }
       }
 
@@ -389,37 +437,41 @@
   <body>
     <div class="container">
       <header>
-        <span class="brand-mark">
+        <a class="brand-mark" href="/">
           <span class="dot" aria-hidden="true"></span>
           NortheBridge Foundation
-        </span>
-        <h1>Open source, beautifully engineered.</h1>
+        </a>
+        <div class="hero-brand">
+          <img class="hero-logo" src="/en/luminalshine/luminalshine-logo.png" alt="" width="96" height="96" />
+          <h1>LuminalShine</h1>
+        </div>
         <p class="lead">
-          We build modern, high-performance tools for game streaming and living-room computing &mdash; designed in the open for the people who use them.
+          A modern, self-hosted, high-performance Sunshine-compatible game stream host for
+          <a href="https://moonlight-stream.org" target="_blank" rel="noopener">Moonlight</a>
+          &mdash; built for Windows&nbsp;11 and Windows&nbsp;11 Insider Preview.
         </p>
       </header>
 
       <main>
-        <h2 class="section-label">Projects</h2>
-        <section class="projects">
-          <a class="card" href="/en/luminalshine/">
+        <h2 class="section-label">Get Started</h2>
+        <section class="cards">
+          <a class="card" href="https://appdocs.northebridge.com/projects/luminalshine/en/latest/" target="_blank" rel="noopener">
             <div class="card-header">
               <div class="card-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="4" />
-                  <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" />
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
                 </svg>
               </div>
-              <h3>LuminalShine</h3>
+              <h3>Documentation</h3>
             </div>
             <p class="card-desc">
-              A modern, self-hosted high-performance Sunshine-compatible game stream host for Moonlight &mdash; built for Windows 11 and Windows 11 Insider Preview.
+              Installation, configuration, and troubleshooting guides &mdash; everything you need to get streaming, from first pairing to advanced virtual-display setups.
             </p>
             <div class="card-footer">
               <div class="card-tags">
-                <span class="tag">Windows 11</span>
-                <span class="tag">Game Streaming</span>
-                <span class="tag">Sunshine-compatible</span>
+                <span class="tag">Guides</span>
+                <span class="tag">Changelog</span>
               </div>
               <span class="card-arrow">
                 <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8" /></svg>
@@ -427,23 +479,47 @@
             </div>
           </a>
 
-          <a class="card" href="https://github.com/NortheBridge/Twilight" target="_blank" rel="noopener">
+          <a class="card" href="https://github.com/NortheBridge/luminalshine/releases/latest" target="_blank" rel="noopener">
             <div class="card-header">
               <div class="card-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <path d="M7 10l5 5 5-5M12 15V3" />
                 </svg>
               </div>
-              <h3>Twilight</h3>
+              <h3>Download</h3>
             </div>
             <p class="card-desc">
-              A Moonlight streaming client for LG webOS OLED TVs &mdash; bringing low-latency PC gaming straight to the living room. Available on the webOS App Store.
+              Grab the latest Windows installer or portable build from GitHub Releases and start hosting in minutes.
             </p>
             <div class="card-footer">
               <div class="card-tags">
-                <span class="tag">LG webOS</span>
-                <span class="tag">OLED</span>
-                <span class="tag">Moonlight Client</span>
+                <span class="tag">Windows 11</span>
+                <span class="tag">MSI</span>
+              </div>
+              <span class="card-arrow">
+                <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8" /></svg>
+              </span>
+            </div>
+          </a>
+
+          <a class="card" href="https://github.com/NortheBridge/luminalshine" target="_blank" rel="noopener">
+            <div class="card-header">
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" />
+                </svg>
+              </div>
+              <h3>Source Code</h3>
+            </div>
+            <p class="card-desc">
+              LuminalShine is developed in the open. Browse the source, report issues, and contribute on GitHub.
+            </p>
+            <div class="card-footer">
+              <div class="card-tags">
+                <span class="tag">GPL-3.0</span>
+                <span class="tag">Open Source</span>
               </div>
               <span class="card-arrow">
                 <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8" /></svg>
