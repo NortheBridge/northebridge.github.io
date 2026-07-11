@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LuminalVGD | NortheBridge Foundation</title>
+    <meta name="description" content="LuminalVGD — the Luminal Video Graphics Display Driver. A first-party, attestation-signed virtual display driver for LuminalShine, written in Rust for Windows 11." />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect x='32' y='8' width='56' height='38' rx='6' fill='none' stroke='%23ffb020' stroke-width='4' stroke-dasharray='7 6' opacity='.6'/%3E%3Crect x='8' y='26' width='62' height='44' rx='7' fill='none' stroke='%23ff7a1a' stroke-width='5'/%3E%3Cpath d='M39 70v9M27 82h24' stroke='%23ffb020' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XDW66C09S1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-XDW66C09S1');
+    </script>
+    <style>
+      :root {
+        /* Learn Dark surfaces (LuminalShine RTD) */
+        --bg-base: #111111;
+        --bg-deep: #1a1206;
+        /* Sunshine brand palette (from sunshine.png, via the RTD theme) */
+        --sun-red: #ff3d00;    /* deep red-orange — outer flare */
+        --sun-orange: #ff7a1a; /* mid orange — warnings, hover-to-active */
+        --sun-gold: #ffb020;   /* PRIMARY — links, focus, brand mark */
+        --sun-soft: #ffc857;   /* soft gold — hover / secondary accents */
+        --text-primary: #e6e6e6;
+        --text-secondary: rgba(230, 230, 230, 0.68);
+        --text-muted: rgba(184, 184, 184, 0.55);
+        --glass-bg: rgba(46, 32, 14, 0.35);
+        --glass-border: rgba(255, 255, 255, 0.12);
+        --glass-border-hover: rgba(255, 176, 32, 0.45);
+        --glass-highlight: rgba(255, 255, 255, 0.08);
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+      }
+
+      body {
+        font-family: "Segoe UI Variable Text", "Segoe UI", "Inter", -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+        font-feature-settings: "ss01", "cv11";
+        background-color: var(--bg-base);
+        color: var(--text-primary);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: -20%;
+        z-index: -2;
+        background:
+          radial-gradient(ellipse 60% 50% at 15% 20%, rgba(255, 176, 32, 0.28), transparent 60%),
+          radial-gradient(ellipse 50% 45% at 85% 15%, rgba(255, 61, 0, 0.22), transparent 60%),
+          radial-gradient(ellipse 70% 55% at 50% 95%, rgba(255, 122, 26, 0.18), transparent 65%),
+          radial-gradient(ellipse 45% 40% at 90% 80%, rgba(255, 200, 87, 0.16), transparent 60%),
+          linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-base) 100%);
+        filter: blur(40px) saturate(125%);
+        animation: sunshine-drift 28s ease-in-out infinite alternate;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background-image:
+          radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size: 3px 3px;
+        opacity: 0.6;
+        pointer-events: none;
+        mix-blend-mode: overlay;
+      }
+
+      @keyframes sunshine-drift {
+        0%   { transform: translate3d(0, 0, 0) scale(1); }
+        50%  { transform: translate3d(-2%, 1.5%, 0) scale(1.05); }
+        100% { transform: translate3d(2%, -1%, 0) scale(1.02); }
+      }
+
+      .container {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 6rem 1.5rem 5rem;
+        position: relative;
+      }
+
+      header {
+        margin-bottom: 4rem;
+        max-width: 720px;
+      }
+
+      .brand-mark {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.4rem 0.9rem 0.4rem 0.5rem;
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid var(--glass-border);
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        color: var(--text-secondary);
+        margin-bottom: 1.75rem;
+        text-decoration: none;
+        transition: border-color 0.3s ease, color 0.3s ease;
+      }
+
+      a.brand-mark:hover {
+        border-color: var(--glass-border-hover);
+        color: var(--text-primary);
+      }
+
+      .brand-mark .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--sun-gold), var(--sun-red));
+        box-shadow: 0 0 12px rgba(255, 176, 32, 0.7);
+        animation: pulse 2.4s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50%      { opacity: 0.6; transform: scale(0.85); }
+      }
+
+      .hero-brand {
+        display: flex;
+        align-items: center;
+        gap: 1.4rem;
+        margin-bottom: 1.25rem;
+      }
+
+      /* Inline SVG mark in the same warm treatment as the
+         LuminalShine RTD logo: gradient strokes, warm drop-shadow. */
+      .hero-logo {
+        width: 96px;
+        height: 96px;
+        flex-shrink: 0;
+        filter: drop-shadow(0 1px 3px rgba(255, 122, 26, 0.35));
+      }
+
+      /* Sunburst text-clip gradient on the wordmark, as on the RTD
+         sidebar-brand-text: deep red-orange → sun gold → soft gold. */
+      h1 {
+        font-size: clamp(2.6rem, 6vw, 4.4rem);
+        line-height: 1.05;
+        margin: 0;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        font-family: "Segoe UI Variable Display", "Segoe UI Variable Text", "Segoe UI",
+          -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+        background: linear-gradient(135deg, #ff5c1a 0%, var(--sun-gold) 55%, var(--sun-soft) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+      }
+
+      .lead {
+        font-size: clamp(1.05rem, 1.7vw, 1.25rem);
+        color: var(--text-secondary);
+        max-width: 620px;
+        margin: 0;
+        font-weight: 400;
+      }
+
+      .lead a {
+        color: var(--sun-gold);
+        text-decoration: none;
+      }
+
+      .lead a:hover {
+        color: var(--sun-soft);
+        text-decoration: underline;
+        text-decoration-color: rgba(255, 200, 87, 0.55);
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        margin-top: 1.5rem;
+        padding: 0.35rem 0.9rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--sun-soft);
+        background: rgba(255, 122, 26, 0.10);
+        border: 1px solid rgba(255, 176, 32, 0.35);
+        border-radius: 999px;
+      }
+
+      .status-pill .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--sun-orange);
+        box-shadow: 0 0 10px rgba(255, 122, 26, 0.8);
+        animation: pulse 2.4s ease-in-out infinite;
+      }
+
+      .section-label {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin: 0 0 1.5rem;
+      }
+
+      .section-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, var(--glass-border), transparent);
+      }
+
+      main > .section-label:not(:first-child) {
+        margin-top: 4rem;
+      }
+
+      /* ---------- Features ---------- */
+
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.25rem;
+      }
+
+      .feature {
+        position: relative;
+        padding: 1.5rem 1.5rem 1.4rem;
+        border-radius: 18px;
+        background: var(--glass-bg);
+        backdrop-filter: blur(22px) saturate(180%);
+        -webkit-backdrop-filter: blur(22px) saturate(180%);
+        border: 1px solid var(--glass-border);
+        box-shadow:
+          0 1px 0 var(--glass-highlight) inset,
+          0 20px 40px -25px rgba(0, 0, 0, 0.55);
+      }
+
+      .feature-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .feature-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, rgba(255, 176, 32, 0.22), rgba(255, 61, 0, 0.22));
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--sun-gold);
+        flex-shrink: 0;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      }
+
+      .feature-icon svg {
+        width: 19px;
+        height: 19px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .feature h3 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: var(--text-primary);
+      }
+
+      .feature p {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: 0.92rem;
+        line-height: 1.6;
+      }
+
+      /* ---------- Cards ---------- */
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        padding: 2rem 2rem 1.75rem;
+        border-radius: 22px;
+        background: var(--glass-bg);
+        backdrop-filter: blur(22px) saturate(180%);
+        -webkit-backdrop-filter: blur(22px) saturate(180%);
+        border: 1px solid var(--glass-border);
+        color: inherit;
+        text-decoration: none;
+        overflow: hidden;
+        isolation: isolate;
+        transition:
+          transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+          border-color 0.4s ease,
+          box-shadow 0.5s ease,
+          background 0.4s ease;
+        box-shadow:
+          0 1px 0 var(--glass-highlight) inset,
+          0 30px 60px -30px rgba(0, 0, 0, 0.6);
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(120% 80% at 0% 0%, rgba(255, 176, 32, 0.16), transparent 55%),
+          radial-gradient(120% 80% at 100% 100%, rgba(255, 61, 0, 0.12), transparent 55%);
+        opacity: 0.85;
+        z-index: -1;
+        transition: opacity 0.5s ease;
+      }
+
+      .card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(135deg, rgba(255, 176, 32, 0.55), rgba(255, 61, 0, 0.0) 35%, rgba(255, 200, 87, 0.0) 65%, rgba(255, 176, 32, 0.45));
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+                mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        pointer-events: none;
+      }
+
+      a.card:hover,
+      a.card:focus-visible {
+        transform: translateY(-4px);
+        border-color: var(--glass-border-hover);
+        box-shadow:
+          0 1px 0 var(--glass-highlight) inset,
+          0 0 0 1px rgba(255, 176, 32, 0.18),
+          0 25px 55px -20px rgba(255, 122, 26, 0.35),
+          0 40px 80px -30px rgba(255, 61, 0, 0.30);
+        outline: none;
+      }
+
+      a.card:hover::before,
+      a.card:focus-visible::before { opacity: 1; }
+
+      a.card:hover::after,
+      a.card:focus-visible::after { opacity: 1; }
+
+      /* Disabled (coming soon) card: rendered in the same glass,
+         but muted and inert. */
+      .card-disabled {
+        opacity: 0.62;
+        cursor: default;
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .card-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, rgba(255, 176, 32, 0.22), rgba(255, 61, 0, 0.22));
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--sun-gold);
+        flex-shrink: 0;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      }
+
+      .card-icon svg {
+        width: 22px;
+        height: 22px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .card h3 {
+        margin: 0;
+        font-size: 1.35rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--text-primary);
+      }
+
+      .card-desc {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: 0.97rem;
+        line-height: 1.6;
+        flex: 1;
+      }
+
+      .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-top: 1.75rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+      }
+
+      .card-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.65rem;
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        color: var(--text-secondary);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 999px;
+      }
+
+      .card-arrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: var(--sun-gold);
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.3s ease;
+        flex-shrink: 0;
+      }
+
+      .card-arrow svg {
+        width: 14px;
+        height: 14px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      a.card:hover .card-arrow svg,
+      a.card:focus-visible .card-arrow svg {
+        transform: translate(3px, -3px);
+      }
+
+      .card-soon {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        font-weight: 500;
+        flex-shrink: 0;
+      }
+
+      footer {
+        margin-top: 5rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+      }
+
+      .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1.4rem;
+      }
+
+      footer a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: color 0.25s ease;
+      }
+
+      footer a:hover { color: var(--sun-gold); }
+
+      ::selection {
+        background: rgba(255, 176, 32, 0.30);
+        color: var(--text-primary);
+      }
+
+      @media (max-width: 640px) {
+        .container { padding: 4rem 1.25rem 3rem; }
+        header { margin-bottom: 3rem; }
+        .hero-brand { gap: 1rem; }
+        .hero-logo { width: 72px; height: 72px; }
+        .card { padding: 1.65rem 1.5rem 1.4rem; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        body::before { animation: none; }
+        .brand-mark .dot, .status-pill .dot { animation: none; }
+        .card, .card-arrow svg { transition: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <a class="brand-mark" href="/">
+          <span class="dot" aria-hidden="true"></span>
+          NortheBridge Foundation
+        </a>
+        <div class="hero-brand">
+          <svg class="hero-logo" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LuminalVGD virtual display mark">
+            <defs>
+              <linearGradient id="vgd-grad" x1="0" y1="0" x2="96" y2="96" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#ff5c1a" />
+                <stop offset="0.55" stop-color="#ffb020" />
+                <stop offset="1" stop-color="#ffc857" />
+              </linearGradient>
+            </defs>
+            <!-- virtual (ghost) display -->
+            <rect x="33" y="8" width="55" height="37" rx="6" fill="none"
+                  stroke="url(#vgd-grad)" stroke-width="3.5" stroke-dasharray="7 6" opacity="0.55" />
+            <!-- physical display -->
+            <rect x="8" y="26" width="62" height="44" rx="7" fill="none"
+                  stroke="url(#vgd-grad)" stroke-width="4.5" />
+            <!-- signal -->
+            <circle cx="39" cy="48" r="4" fill="url(#vgd-grad)" />
+            <!-- stand -->
+            <path d="M39 70v9M27 82h24" stroke="url(#vgd-grad)" stroke-width="4.5"
+                  stroke-linecap="round" fill="none" />
+          </svg>
+          <h1>LuminalVGD</h1>
+        </div>
+        <p class="lead">
+          The Luminal Video Graphics Display Driver &mdash; a first-party, attestation-signed
+          virtual display driver for
+          <a href="/en/luminalshine/">LuminalShine</a>,
+          written in Rust for Windows&nbsp;11 and Windows&nbsp;11 Insider Preview.
+        </p>
+        <span class="status-pill">
+          <span class="dot" aria-hidden="true"></span>
+          Status: Pre-development
+        </span>
+      </header>
+
+      <main>
+        <h2 class="section-label">Features</h2>
+        <section class="features">
+          <div class="feature">
+            <div class="feature-header">
+              <div class="feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M8 6L4 12l4 6M16 6l4 6-4 6" />
+                </svg>
+              </div>
+              <h3>Rust, from the ground up</h3>
+            </div>
+            <p>
+              LuminalVGD marks the Foundation&rsquo;s transition to Rust for driver
+              development &mdash; bringing memory safety to the code that sits closest
+              to the display stack.
+            </p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-header">
+              <div class="feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 2l8 4v6c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V6l8-4z" />
+                  <path d="M9 12l2 2 4-4" />
+                </svg>
+              </div>
+              <h3>Legitimately signed, with attestation</h3>
+            </div>
+            <p>
+              A properly attestation-signed driver &mdash; like SudoVDA, and unlike
+              pf-display &mdash; so it installs on stock Windows&nbsp;11 with no
+              test-signing mode or security compromises.
+            </p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-header">
+              <div class="feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="6" y="6" width="12" height="12" rx="2" />
+                  <path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4" />
+                </svg>
+              </div>
+              <h3>Modern IddCx architecture</h3>
+            </div>
+            <p>
+              A UMDF Indirect Display Driver (IddCx) built specifically for
+              Windows&nbsp;11 and Insider Preview builds &mdash; running in user mode,
+              not the kernel.
+            </p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-header">
+              <div class="feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="2" y="4" width="20" height="13" rx="2" />
+                  <path d="M8 21h8M12 17v4" />
+                </svg>
+              </div>
+              <h3>Per-client virtual monitors</h3>
+            </div>
+            <p>
+              Exact mode lists per streaming session &mdash; resolution, refresh rate,
+              and HDR10 metadata matched to each client, including
+              frame-generation-aware refresh doubling.
+            </p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-header">
+              <div class="feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M21 12a9 9 0 1 1-2.64-6.36" />
+                  <path d="M21 3v6h-6" />
+                </svg>
+              </div>
+              <h3>First-class recovery</h3>
+            </div>
+            <p>
+              Designed to survive GPU TDRs and driver restarts without wedging
+              WUDFHost, with a control interface built for LuminalShine&rsquo;s
+              watchdog and recovery ladder.
+            </p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-header">
+              <div class="feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 2l9 5-9 5-9-5 9-5z" />
+                  <path d="M3 12l9 5 9-5M3 17l9 5 9-5" />
+                </svg>
+              </div>
+              <h3>Built for LuminalShine</h3>
+            </div>
+            <p>
+              Render-adapter selection on hybrid-GPU laptops, signed and serviced
+              through the LuminalShine installer, and set to supersede SudoVDA as the
+              default virtual display backend.
+            </p>
+          </div>
+        </section>
+
+        <h2 class="section-label">Project</h2>
+        <section class="cards">
+          <a class="card" href="https://github.com/NortheBridge/LuminalVGD" target="_blank" rel="noopener">
+            <div class="card-header">
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="6" cy="6" r="3" />
+                  <circle cx="6" cy="18" r="3" />
+                  <circle cx="18" cy="6" r="3" />
+                  <path d="M18 9a9 9 0 0 1-9 9M6 9v6" />
+                </svg>
+              </div>
+              <h3>Source Code</h3>
+            </div>
+            <p class="card-desc">
+              LuminalVGD is developed in the open. Browse the source, follow progress, report issues, and contribute on GitHub. Contributions require a signed CLA.
+            </p>
+            <div class="card-footer">
+              <div class="card-tags">
+                <span class="tag">Rust</span>
+                <span class="tag">Open Source</span>
+              </div>
+              <span class="card-arrow">
+                <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8" /></svg>
+              </span>
+            </div>
+          </a>
+
+          <a class="card" href="https://github.com/NortheBridge/LuminalVGD/blob/main/LICENSING.md" target="_blank" rel="noopener">
+            <div class="card-header">
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 3v18M7 21h10" />
+                  <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2" />
+                  <path d="M2 16l3-8 3 8a4.2 4.2 0 0 1-6 0zM16 16l3-8 3 8a4.2 4.2 0 0 1-6 0z" />
+                </svg>
+              </div>
+              <h3>Licensing</h3>
+            </div>
+            <p class="card-desc">
+              Dual-licensed: AGPL-3.0 for open-source use &mdash; anything that uses, links, or derives from LuminalVGD must release its complete source under the same license &mdash; or the NortheBridge Access License Agreement (NALA) for commercial use without source-disclosure obligations.
+            </p>
+            <div class="card-footer">
+              <div class="card-tags">
+                <span class="tag">AGPL-3.0</span>
+                <span class="tag">NALA</span>
+              </div>
+              <span class="card-arrow">
+                <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8" /></svg>
+              </span>
+            </div>
+          </a>
+
+          <a class="card" href="/en/luminalshine/">
+            <div class="card-header">
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" />
+                </svg>
+              </div>
+              <h3>LuminalShine</h3>
+            </div>
+            <p class="card-desc">
+              LuminalVGD is the first-party virtual display backend for LuminalShine, the self-hosted Sunshine-compatible game stream host for Moonlight.
+            </p>
+            <div class="card-footer">
+              <div class="card-tags">
+                <span class="tag">Game Streaming</span>
+                <span class="tag">Windows 11</span>
+              </div>
+              <span class="card-arrow">
+                <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8" /></svg>
+              </span>
+            </div>
+          </a>
+
+          <div class="card card-disabled" aria-disabled="true">
+            <div class="card-header">
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <path d="M7 10l5 5 5-5M12 15V3" />
+                </svg>
+              </div>
+              <h3>Download</h3>
+            </div>
+            <p class="card-desc">
+              No releases yet &mdash; LuminalVGD is in pre-development. Once it ships, it will be delivered and serviced through the LuminalShine installer as the default virtual display backend.
+            </p>
+            <div class="card-footer">
+              <div class="card-tags">
+                <span class="tag">Coming Soon</span>
+              </div>
+              <span class="card-soon">Coming soon</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <span>&copy; NortheBridge Foundation</span>
+        <nav class="footer-links" aria-label="Footer">
+          <a href="/terms/">Terms</a>
+          <a href="/privacy/">Privacy</a>
+          <a href="/licenses/">Software Licenses</a>
+          <a href="https://github.com/NortheBridge" target="_blank" rel="noopener">github.com/NortheBridge</a>
+        </nav>
+      </footer>
+    </div>
+  </body>
+</html>
